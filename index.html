@@ -5,9 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="./css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Carter+One&display=swap"
+      rel="stylesheet"
+    />
     <script src="./main.js"></script>
 
     <title>Tic Tac Toe</title>
   </head>
-  <body></body>
+  <body class="bg-black">
+    <div
+      id="header"
+      class="b flex h-[20vh] items-center justify-center text-4xl text-white sm:text-6xl"
+    >
+      <h1 id="tic-tac-toe" class="gradient-text">TIC TAC TOE</h1>
+    </div>
+    <div
+      id="gameboard"
+      class="mx-auto grid w-[310px] grid-cols-[repeat(3,_1fr)] gap-3 sm:w-[500px]"
+    >
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+      <div class="h-24 w-24 rounded-xl bg-white sm:h-40 sm:w-40"></div>
+    </div>
+  </body>
 </html>
