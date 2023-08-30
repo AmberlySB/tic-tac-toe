@@ -1,5 +1,6 @@
 const gameBoard = (() => {
   const gameBoardState = ["", "", "", "", "", "", "", "", ""];
+
   const updateBoard = function (gameSpace) {
     if (player.players.length < 2) {
       return;
@@ -14,9 +15,20 @@ const gameBoard = (() => {
     }
   };
 
+  const resetBoard = () => {
+    gameBoardState.forEach((element, index) => {
+      gameBoardState.splice(index, 1, "");
+      accessDOM.gameSpaces.forEach((element) => {
+        element.textContent = "";
+        dialog.close();
+      });
+    });
+  };
+
   return {
     gameBoardState: gameBoardState,
     updateBoard: updateBoard,
+    resetBoard: resetBoard,
   };
 })();
 
@@ -110,6 +122,8 @@ const game = (() => {
       compareArray(winCondition.h, xIndices)
     ) {
       player.updateScore(player.players[0]);
+      accessDOM.winnerMessage.textContent = `${player.players[0].name} is the winner!`;
+      continueGame();
       console.log("Player One is the Winner!");
     }
     if (
@@ -123,8 +137,14 @@ const game = (() => {
       compareArray(winCondition.h, oIndices)
     ) {
       player.updateScore(player.players[1]);
+      accessDOM.winnerMessage.textContent = `${player.players[1].name} is the winner!`;
+      continueGame();
       console.log("Player Two is the Winner!");
     }
+  };
+
+  const continueGame = () => {
+    dialog.showModal();
   };
 
   return {
@@ -180,7 +200,14 @@ const accessDOM = (() => {
     playerTwoScore.textContent = `${player.players[1].name} Score: ${player.players[1].score}`;
   };
 
+  const winnerMessage = document.getElementById("winner-message");
+
+  const keepPlaying = document.getElementById("continue");
+  keepPlaying.addEventListener("click", gameBoard.resetBoard);
+
   return {
     displayScore: displayScore,
+    gameSpaces: gameSpaces,
+    winnerMessage: winnerMessage,
   };
 })();

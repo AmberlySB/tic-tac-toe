@@ -82,5 +82,30 @@
         </div>
       </div>
     </div>
+    <dialog id="dialog" class="rounded-xl">
+      <form
+        method="dialog"
+        class="box-border flex flex-col items-center bg-slate-600 p-6 text-2xl font-bold text-white"
+      >
+        <div id="winner-message"></div>
+        <div class="mt-2">Keep Playing?</div>
+        <div class="mt-4 box-border p-4">
+          <button
+            id="continue"
+            type="button"
+            class="gradient-bg mr-6 rounded-3xl px-6 py-2"
+          >
+            Yes!
+          </button>
+          <button
+            id="reset"
+            type="button"
+            class="gradient-bg rounded-3xl px-7 py-2"
+          >
+            No!
+          </button>
+        </div>
+      </form>
+    </dialog>
   </body>
 </html>
