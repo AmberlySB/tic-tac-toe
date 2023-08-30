@@ -1,10 +1,17 @@
 const gameBoard = (() => {
   const gameBoardState = ["", "", "", "", "", "", "", "", ""];
   const updateBoard = function (gameSpace) {
-    game.setTurn();
-    console.log(game.getTurn().marker);
-    document.getElementById(gameSpace).textContent = `${game.getTurn().marker}`;
-    gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
+    if (player.players.length < 2) {
+      return;
+    } else {
+      game.setTurn();
+      console.log(game.getTurn().marker);
+      document.getElementById(gameSpace).textContent = `${
+        game.getTurn().marker
+      }`;
+      gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
+      game.checkWinner();
+    }
   };
 
   return {
@@ -54,9 +61,44 @@ const game = (() => {
     return turn;
   };
 
+  const checkWinner = () => {
+    const winCondition = {
+      a: [0, 1, 2],
+      b: [3, 4, 5],
+      c: [6, 7, 8],
+      d: [0, 3, 6],
+      e: [1, 4, 7],
+      f: [2, 5, 8],
+      g: [0, 4, 8],
+      h: [2, 4, 6],
+    };
+    const xIndices = [];
+    let idx = gameBoard.gameBoardState.indexOf("X");
+    while (idx !== -1) {
+      xIndices.push(idx);
+      idx = gameBoard.gameBoardState.indexOf("X", idx + 1);
+    }
+    const compareArray = (arr1, arr2) => {
+      return arr1.every((element) => arr2.includes(element));
+    };
+    if (
+      compareArray(winCondition.a, xIndices) ||
+      compareArray(winCondition.b, xIndices) ||
+      compareArray(winCondition.c, xIndices) ||
+      compareArray(winCondition.d, xIndices) ||
+      compareArray(winCondition.e, xIndices) ||
+      compareArray(winCondition.f, xIndices) ||
+      compareArray(winCondition.g, xIndices) ||
+      compareArray(winCondition.h, xIndices)
+    ) {
+      console.log("Player One is the Winner!");
+    }
+  };
+
   return {
     setTurn: setTurn,
     getTurn: getTurn,
+    checkWinner: checkWinner,
   };
 })();
 
