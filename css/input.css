@@ -2,7 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-#tic-tac-toe {
+.font-carter {
   font-family: "Carter One", cursive;
 }
 
@@ -20,6 +20,7 @@
     rgb(239 68 68)
   );
   background-size: 400%;
+  background-clip: text;
   -webkit-background-clip: text;
   -moz-background-clip: text;
   -webkit-text-fill-color: transparent;
