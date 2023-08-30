@@ -21,27 +21,36 @@ const gameBoard = (() => {
 })();
 
 const player = (() => {
-  const createPlayer = (name, marker) => {
-    const sayHello = () => console.log(`${name} has ${marker}`);
-    return { name, marker, sayHello };
+  const createPlayer = (name, marker, score) => {
+    return { name, marker, score };
   };
 
   const players = [];
   const setPlayersOne = () => {};
   const setPlayersTwo = () => {
-    const playerOne = createPlayer("Player One", "X");
+    const playerOne = createPlayer("Player One", "X", 0);
     players.push(playerOne);
-    const playerTwo = createPlayer("Player Two", "O");
+    const playerTwo = createPlayer("Player Two", "O", 0);
     players.push(playerTwo);
-    playerOne.sayHello();
-    playerTwo.sayHello();
-    console.log(`${players[0].name} vs ${players[1].name}`);
+    accessDOM.displayScore();
+  };
+
+  const updateScore = (player) => {
+    player.score += 1;
+    document.getElementById(
+      "playerOne",
+    ).textContent = `${players[0].name} Score: ${players[0].score}`;
+    document.getElementById(
+      "playerTwo",
+    ).textContent = `${players[1].name} Score: ${players[1].score}`;
+    console.table(players);
   };
 
   return {
     setPlayersOne: setPlayersOne,
     setPlayersTwo: setPlayersTwo,
     players: players,
+    updateScore: updateScore,
   };
 })();
 
@@ -100,6 +109,7 @@ const game = (() => {
       compareArray(winCondition.g, xIndices) ||
       compareArray(winCondition.h, xIndices)
     ) {
+      player.updateScore(player.players[0]);
       console.log("Player One is the Winner!");
     }
     if (
@@ -112,6 +122,7 @@ const game = (() => {
       compareArray(winCondition.g, oIndices) ||
       compareArray(winCondition.h, oIndices)
     ) {
+      player.updateScore(player.players[1]);
       console.log("Player Two is the Winner!");
     }
   };
@@ -144,4 +155,32 @@ const accessDOM = (() => {
   console.log(playerVsPlayer);
   playerVsPlayer.addEventListener("click", player.setPlayersTwo);
   playerVsAi.addEventListener("click", player.setPlayersOne);
+
+  const scoreContainer = document.getElementById("score-container");
+  const choosePlayers = document.getElementById("choose-players");
+  const displayScore = () => {
+    const scoreDiv = document.createElement("div");
+    scoreDiv.setAttribute("id", "score");
+    scoreDiv.classList.add("text-2xl");
+    choosePlayers.replaceWith(scoreDiv);
+    const score = document.getElementById("score");
+    const playerOneDiv = document.createElement("div");
+    playerOneDiv.setAttribute("id", "playerOne");
+    score.appendChild(playerOneDiv);
+    const playerOneScore = document.getElementById("playerOne");
+    playerOneScore.textContent = `${player.players[0].name} Score: ${player.players[0].score}`;
+    const vsDiv = document.createElement("div");
+    vsDiv.appendChild(document.createTextNode("VS"));
+    score.appendChild(vsDiv);
+    const playerTwoDiv = document.createElement("div");
+    playerTwoDiv.setAttribute("id", "playerTwo");
+    score.appendChild(playerTwoDiv);
+    const playerTwoScore = document.getElementById("playerTwo");
+    console.log(playerTwoScore);
+    playerTwoScore.textContent = `${player.players[1].name} Score: ${player.players[1].score}`;
+  };
+
+  return {
+    displayScore: displayScore,
+  };
 })();
