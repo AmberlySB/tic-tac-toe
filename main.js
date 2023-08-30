@@ -73,14 +73,23 @@ const game = (() => {
       h: [2, 4, 6],
     };
     const xIndices = [];
-    let idx = gameBoard.gameBoardState.indexOf("X");
-    while (idx !== -1) {
-      xIndices.push(idx);
-      idx = gameBoard.gameBoardState.indexOf("X", idx + 1);
+    const oIndices = [];
+    let x = gameBoard.gameBoardState.indexOf("X");
+    while (x !== -1) {
+      xIndices.push(x);
+      x = gameBoard.gameBoardState.indexOf("X", x + 1);
     }
+
+    let o = gameBoard.gameBoardState.indexOf("O");
+    while (o !== -1) {
+      oIndices.push(o);
+      o = gameBoard.gameBoardState.indexOf("O", o + 1);
+    }
+
     const compareArray = (arr1, arr2) => {
       return arr1.every((element) => arr2.includes(element));
     };
+
     if (
       compareArray(winCondition.a, xIndices) ||
       compareArray(winCondition.b, xIndices) ||
@@ -92,6 +101,18 @@ const game = (() => {
       compareArray(winCondition.h, xIndices)
     ) {
       console.log("Player One is the Winner!");
+    }
+    if (
+      compareArray(winCondition.a, oIndices) ||
+      compareArray(winCondition.b, oIndices) ||
+      compareArray(winCondition.c, oIndices) ||
+      compareArray(winCondition.d, oIndices) ||
+      compareArray(winCondition.e, oIndices) ||
+      compareArray(winCondition.f, oIndices) ||
+      compareArray(winCondition.g, oIndices) ||
+      compareArray(winCondition.h, oIndices)
+    ) {
+      console.log("Player Two is the Winner!");
     }
   };
 
