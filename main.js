@@ -181,7 +181,7 @@ const accessDOM = (() => {
   const displayScore = () => {
     const scoreDiv = document.createElement("div");
     scoreDiv.setAttribute("id", "score");
-    scoreDiv.classList.add("text-2xl");
+    scoreDiv.classList.add("text-2xl", "sm:text-3xl");
     choosePlayers.replaceWith(scoreDiv);
     const score = document.getElementById("score");
     const playerOneDiv = document.createElement("div");
@@ -190,6 +190,7 @@ const accessDOM = (() => {
     const playerOneScore = document.getElementById("playerOne");
     playerOneScore.textContent = `${player.players[0].name} Score: ${player.players[0].score}`;
     const vsDiv = document.createElement("div");
+    vsDiv.classList.add("gradient-text");
     vsDiv.appendChild(document.createTextNode("VS"));
     score.appendChild(vsDiv);
     const playerTwoDiv = document.createElement("div");
