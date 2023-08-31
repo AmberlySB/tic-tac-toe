@@ -111,7 +111,10 @@ const game = (() => {
       return arr1.every((element) => arr2.includes(element));
     };
 
-    if (
+    if (!gameBoard.gameBoardState.includes("")) {
+      accessDOM.winnerMessage.textContent = "It was a draw!";
+      continueGame();
+    } else if (
       compareArray(winCondition.a, xIndices) ||
       compareArray(winCondition.b, xIndices) ||
       compareArray(winCondition.c, xIndices) ||
@@ -125,8 +128,7 @@ const game = (() => {
       accessDOM.winnerMessage.textContent = `${player.players[0].name} is the winner!`;
       continueGame();
       console.log("Player One is the Winner!");
-    }
-    if (
+    } else if (
       compareArray(winCondition.a, oIndices) ||
       compareArray(winCondition.b, oIndices) ||
       compareArray(winCondition.c, oIndices) ||
