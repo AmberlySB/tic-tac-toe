@@ -38,11 +38,13 @@ const player = (() => {
   };
 
   const players = [];
+
   const setPlayersOne = () => {};
-  const setPlayersTwo = () => {
-    const playerOne = createPlayer("Player One", "X", 0);
+
+  const setPlayersTwo = (first, second) => {
+    const playerOne = createPlayer(first, "X", 0);
     players.push(playerOne);
-    const playerTwo = createPlayer("Player Two", "O", 0);
+    const playerTwo = createPlayer(second, "O", 0);
     players.push(playerTwo);
     accessDOM.displayScore();
   };
@@ -172,19 +174,62 @@ const accessDOM = (() => {
     space.addEventListener("click", getGameSpaceId);
   });
 
+  const choosePlayers = document.getElementById("choose-players");
+  const getPlayerNames = () => {
+    const nameDiv = document.createElement("div");
+    nameDiv.setAttribute("id", "player-names");
+    nameDiv.classList.add("text-white", "flex", "flex-col", "items-center");
+
+    // Player One
+    const nameOneLabel = document.createElement("label");
+    nameOneLabel.setAttribute("for", "playerOneName");
+    nameOneLabel.classList.add("flex");
+    const nameOnePara = document.createElement("p");
+    nameOnePara.classList.add("mr-3");
+    nameOnePara.appendChild(document.createTextNode("Player One Name: "));
+    nameOneLabel.appendChild(nameOnePara);
+    const nameOneInput = document.createElement("input");
+    nameOneInput.setAttribute("id", "playerOneName");
+    nameOneInput.classList.add("text-black", "mb-3", "px-1", "rounded");
+    nameOneLabel.appendChild(nameOneInput);
+    nameDiv.appendChild(nameOneLabel);
+
+    // player 2
+    const nameTwoLabel = document.createElement("label");
+    nameTwoLabel.setAttribute("for", "playerTwoName");
+    nameTwoLabel.classList.add("flex");
+    const nameTwoPara = document.createElement("p");
+    nameTwoPara.classList.add("mr-3");
+    nameTwoPara.appendChild(document.createTextNode("Player Two Name: "));
+    nameTwoLabel.appendChild(nameTwoPara);
+    const nameTwoInput = document.createElement("input");
+    nameTwoInput.setAttribute("id", "playerTwoName");
+    nameTwoInput.classList.add("text-black", "mb-5", "px-1", "rounded");
+    nameTwoLabel.appendChild(nameTwoInput);
+    nameDiv.appendChild(nameTwoLabel);
+
+    const nameButton = document.createElement("button");
+    nameButton.setAttribute("type", "button");
+    nameButton.classList.add("gradient-bg", "py-2", "px-6", "rounded-3xl");
+    nameButton.appendChild(document.createTextNode("Next"));
+    nameDiv.appendChild(nameButton);
+    nameButton.addEventListener("click", () => {
+      player.setPlayersTwo(nameOneInput.value, nameTwoInput.value);
+    });
+    choosePlayers.replaceWith(nameDiv);
+  };
+
   const playerVsPlayer = document.getElementById("pvp");
   const playerVsAi = document.getElementById("pve");
   console.log(playerVsPlayer);
-  playerVsPlayer.addEventListener("click", player.setPlayersTwo);
+  playerVsPlayer.addEventListener("click", getPlayerNames);
   playerVsAi.addEventListener("click", player.setPlayersOne);
 
-  const scoreContainer = document.getElementById("score-container");
-  const choosePlayers = document.getElementById("choose-players");
   const displayScore = () => {
     const scoreDiv = document.createElement("div");
     scoreDiv.setAttribute("id", "score");
     scoreDiv.classList.add("text-2xl", "sm:text-3xl");
-    choosePlayers.replaceWith(scoreDiv);
+    document.getElementById("player-names").replaceWith(scoreDiv);
     const score = document.getElementById("score");
     const playerOneDiv = document.createElement("div");
     playerOneDiv.setAttribute("id", "playerOne");
