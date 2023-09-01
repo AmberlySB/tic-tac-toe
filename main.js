@@ -4,14 +4,31 @@ const gameBoard = (() => {
   const updateBoard = function (gameSpace) {
     if (player.players.length < 2) {
       return;
-    } else {
+    } else if (player.players[1].name !== "AI Overlord") {
       game.setTurn();
       console.log(game.getTurn().marker);
       document.getElementById(gameSpace).textContent = `${
         game.getTurn().marker
       }`;
       gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
-      game.checkWinner();
+      if (game.checkWinner()) {
+        game.continueGame();
+      }
+    } else {
+      game.setTurn();
+      if (game.getTurn().name !== "AI Overlord") {
+        document.getElementById(gameSpace).textContent = `${
+          game.getTurn().marker
+        }`;
+        gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
+        if (!game.checkWinner()) {
+          setTimeout(game.aiMove, 1500);
+        } else {
+          game.continueGame();
+        }
+      } else {
+        // game.aiMove();
+      }
     }
   };
 
@@ -113,10 +130,7 @@ const game = (() => {
       return arr1.every((element) => arr2.includes(element));
     };
 
-    if (!gameBoard.gameBoardState.includes("")) {
-      accessDOM.winnerMessage.textContent = "It was a draw!";
-      continueGame();
-    } else if (
+    if (
       compareArray(winCondition.a, xIndices) ||
       compareArray(winCondition.b, xIndices) ||
       compareArray(winCondition.c, xIndices) ||
@@ -128,8 +142,8 @@ const game = (() => {
     ) {
       player.updateScore(player.players[0]);
       accessDOM.winnerMessage.textContent = `${player.players[0].name} is the winner!`;
-      continueGame();
       console.log("Player One is the Winner!");
+      return true;
     } else if (
       compareArray(winCondition.a, oIndices) ||
       compareArray(winCondition.b, oIndices) ||
@@ -142,8 +156,13 @@ const game = (() => {
     ) {
       player.updateScore(player.players[1]);
       accessDOM.winnerMessage.textContent = `${player.players[1].name} is the winner!`;
-      continueGame();
       console.log("Player Two is the Winner!");
+      return true;
+    } else if (!gameBoard.gameBoardState.includes("")) {
+      accessDOM.winnerMessage.textContent = "It was a draw!";
+      return true;
+    } else {
+      return false;
     }
   };
 
@@ -151,10 +170,35 @@ const game = (() => {
     dialog.showModal();
   };
 
+  const aiMove = () => {
+    setTurn();
+    const randomMove = Math.floor(
+      Math.random() * gameBoard.gameBoardState.length,
+    );
+    if (
+      gameBoard.gameBoardState[randomMove] !== "X" &&
+      gameBoard.gameBoardState[randomMove] !== "O"
+    ) {
+      document.getElementById(randomMove).textContent = `${getTurn().marker}`;
+      gameBoard.gameBoardState.splice(randomMove, 1, `${getTurn().marker}`);
+      if (game.checkWinner()) {
+        game.continueGame();
+      }
+    } else if (!gameBoard.gameBoardState.includes("")) {
+      return;
+    } else {
+      console.log(`else ${randomMove}`);
+      aiMove();
+    }
+    console.log(`AI loc: ${randomMove}`);
+  };
+
   return {
     setTurn: setTurn,
     getTurn: getTurn,
     checkWinner: checkWinner,
+    continueGame: continueGame,
+    aiMove: aiMove,
   };
 })();
 
@@ -162,7 +206,7 @@ const accessDOM = (() => {
   const getGameSpaceId = function (e) {
     console.log(e.target.id);
     const gameSpace = e.target.id;
-    if (gameBoard.gameBoardState[gameSpace] != "") {
+    if (gameBoard.gameBoardState[gameSpace] !== "") {
       return;
     } else {
       gameBoard.updateBoard(gameSpace);
@@ -219,11 +263,40 @@ const accessDOM = (() => {
     choosePlayers.replaceWith(nameDiv);
   };
 
+  const getPlayerName = () => {
+    const nameDiv = document.createElement("div");
+    nameDiv.setAttribute("id", "player-names");
+    nameDiv.classList.add("text-white", "flex", "flex-col", "items-center");
+
+    const nameOneLabel = document.createElement("label");
+    nameOneLabel.setAttribute("for", "playerOneName");
+    nameOneLabel.classList.add("flex");
+    const nameOnePara = document.createElement("p");
+    nameOnePara.classList.add("mr-3");
+    nameOnePara.appendChild(document.createTextNode("Player One Name: "));
+    nameOneLabel.appendChild(nameOnePara);
+    const nameOneInput = document.createElement("input");
+    nameOneInput.setAttribute("id", "playerOneName");
+    nameOneInput.classList.add("text-black", "mb-5", "px-1", "rounded");
+    nameOneLabel.appendChild(nameOneInput);
+    nameDiv.appendChild(nameOneLabel);
+
+    const nameButton = document.createElement("button");
+    nameButton.setAttribute("type", "button");
+    nameButton.classList.add("gradient-bg", "py-2", "px-6", "rounded-3xl");
+    nameButton.appendChild(document.createTextNode("Next"));
+    nameDiv.appendChild(nameButton);
+    nameButton.addEventListener("click", () => {
+      player.setPlayersTwo(nameOneInput.value, "AI Overlord");
+    });
+    choosePlayers.replaceWith(nameDiv);
+  };
+
   const playerVsPlayer = document.getElementById("pvp");
   const playerVsAi = document.getElementById("pve");
   console.log(playerVsPlayer);
   playerVsPlayer.addEventListener("click", getPlayerNames);
-  playerVsAi.addEventListener("click", player.setPlayersOne);
+  playerVsAi.addEventListener("click", getPlayerName);
 
   const displayScore = () => {
     const scoreDiv = document.createElement("div");
