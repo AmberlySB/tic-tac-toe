@@ -6,11 +6,10 @@ const gameBoard = (() => {
       return;
     } else if (player.players[1].name !== "AI Overlord") {
       game.setTurn();
-      console.log(game.getTurn().marker);
       if (game.getTurn().marker === "X") {
-        document.getElementById(gameSpace).classList.remove("text-red-500");
-        document.getElementById(gameSpace).classList.add("text-blue-500");
-        document.getElementById(gameSpace).textContent = `${
+        accessDOM.gameSpaces[gameSpace].classList.remove("text-red-500");
+        accessDOM.gameSpaces[gameSpace].classList.add("text-blue-500");
+        accessDOM.gameSpaces[gameSpace].textContent = `${
           game.getTurn().marker
         }`;
         gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
@@ -18,9 +17,9 @@ const gameBoard = (() => {
           game.continueGame();
         }
       } else if (game.getTurn().marker === "O") {
-        document.getElementById(gameSpace).classList.remove("text-blue-500");
-        document.getElementById(gameSpace).classList.add("text-red-500");
-        document.getElementById(gameSpace).textContent = `${
+        accessDOM.gameSpaces[gameSpace].classList.remove("text-blue-500");
+        accessDOM.gameSpaces[gameSpace].classList.add("text-red-500");
+        accessDOM.gameSpaces[gameSpace].textContent = `${
           game.getTurn().marker
         }`;
         gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
@@ -31,9 +30,9 @@ const gameBoard = (() => {
     } else {
       game.setTurn();
       if (game.getTurn().name !== "AI Overlord") {
-        document.getElementById(gameSpace).classList.remove("text-red-500");
-        document.getElementById(gameSpace).classList.add("text-blue-500");
-        document.getElementById(gameSpace).textContent = `${
+        accessDOM.gameSpaces[gameSpace].classList.remove("text-red-500");
+        accessDOM.gameSpaces[gameSpace].classList.add("text-blue-500");
+        accessDOM.gameSpaces[gameSpace].textContent = `${
           game.getTurn().marker
         }`;
         gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
@@ -72,9 +71,7 @@ const player = (() => {
 
   const players = [];
 
-  const setPlayersOne = () => {};
-
-  const setPlayersTwo = (first, second) => {
+  const setPlayers = (first, second) => {
     const playerOne = createPlayer(first, "X", 0);
     players.push(playerOne);
     const playerTwo = createPlayer(second, "O", 0);
@@ -84,18 +81,12 @@ const player = (() => {
 
   const updateScore = (player) => {
     player.score += 1;
-    document.getElementById(
-      "playerOne",
-    ).textContent = `${players[0].name} Score: ${players[0].score}`;
-    document.getElementById(
-      "playerTwo",
-    ).textContent = `${players[1].name} Score: ${players[1].score}`;
-    console.table(players);
+    accessDOM.getDomId().playerOneScore.textContent = `${players[0].name} Score: ${players[0].score}`;
+    accessDOM.getDomId().playerTwoScore.textContent = `${players[1].name} Score: ${players[1].score}`;
   };
 
   return {
-    setPlayersOne: setPlayersOne,
-    setPlayersTwo: setPlayersTwo,
+    setPlayers: setPlayers,
     players: players,
     updateScore: updateScore,
   };
@@ -162,7 +153,6 @@ const game = (() => {
     ) {
       player.updateScore(player.players[0]);
       accessDOM.winnerMessage.textContent = `${player.players[0].name} is the winner!`;
-      console.log("Player One is the Winner!");
       return true;
     } else if (
       compareArray(winCondition.a, oIndices) ||
@@ -176,7 +166,6 @@ const game = (() => {
     ) {
       player.updateScore(player.players[1]);
       accessDOM.winnerMessage.textContent = `${player.players[1].name} is the winner!`;
-      console.log("Player Two is the Winner!");
       return true;
     } else if (!gameBoard.gameBoardState.includes("")) {
       accessDOM.winnerMessage.textContent = "It was a draw!";
@@ -199,8 +188,8 @@ const game = (() => {
       gameBoard.gameBoardState[randomMove] !== "X" &&
       gameBoard.gameBoardState[randomMove] !== "O"
     ) {
-      document.getElementById(randomMove).classList.add("text-red-500");
-      document.getElementById(randomMove).textContent = `${getTurn().marker}`;
+      accessDOM.gameSpaces[randomMove].classList.add("text-red-500");
+      accessDOM.gameSpaces[randomMove].textContent = `${getTurn().marker}`;
       gameBoard.gameBoardState.splice(randomMove, 1, `${getTurn().marker}`);
       if (game.checkWinner()) {
         game.continueGame();
@@ -208,10 +197,8 @@ const game = (() => {
     } else if (!gameBoard.gameBoardState.includes("")) {
       return;
     } else {
-      console.log(`else ${randomMove}`);
       aiMove();
     }
-    console.log(`AI loc: ${randomMove}`);
   };
 
   return {
@@ -225,12 +212,11 @@ const game = (() => {
 
 const accessDOM = (() => {
   const getGameSpaceId = function (e) {
-    console.log(e.target.id);
-    const gameSpace = e.target.id;
-    if (gameBoard.gameBoardState[gameSpace] !== "") {
+    const gameSpaceId = e.target.id;
+    if (gameBoard.gameBoardState[gameSpaceId] !== "") {
       return;
     } else {
-      gameBoard.updateBoard(gameSpace);
+      gameBoard.updateBoard(gameSpaceId);
     }
   };
 
@@ -279,7 +265,7 @@ const accessDOM = (() => {
     nameButton.appendChild(document.createTextNode("Next"));
     nameDiv.appendChild(nameButton);
     nameButton.addEventListener("click", () => {
-      player.setPlayersTwo(nameOneInput.value, nameTwoInput.value);
+      player.setPlayers(nameOneInput.value, nameTwoInput.value);
     });
     choosePlayers.replaceWith(nameDiv);
   };
@@ -308,14 +294,13 @@ const accessDOM = (() => {
     nameButton.appendChild(document.createTextNode("Next"));
     nameDiv.appendChild(nameButton);
     nameButton.addEventListener("click", () => {
-      player.setPlayersTwo(nameOneInput.value, "AI Overlord");
+      player.setPlayers(nameOneInput.value, "AI Overlord");
     });
     choosePlayers.replaceWith(nameDiv);
   };
 
   const playerVsPlayer = document.getElementById("pvp");
   const playerVsAi = document.getElementById("pve");
-  console.log(playerVsPlayer);
   playerVsPlayer.addEventListener("click", getPlayerNames);
   playerVsAi.addEventListener("click", getPlayerName);
 
@@ -323,7 +308,15 @@ const accessDOM = (() => {
     // Score container
     const scoreDiv = document.createElement("div");
     scoreDiv.setAttribute("id", "score");
-    scoreDiv.classList.add("text-2xl", "sm:text-3xl");
+    scoreDiv.classList.add(
+      "flex",
+      "flex-col",
+      "justify-evenly",
+      "items-center",
+      "text-2xl",
+      "text-white",
+      "sm:text-3xl",
+    );
     document.getElementById("player-names").replaceWith(scoreDiv);
     const score = document.getElementById("score");
 
@@ -379,8 +372,7 @@ const accessDOM = (() => {
     const playerOneDiv = document.createElement("div");
     playerOneDiv.setAttribute("id", "playerOne");
     playersDiv.appendChild(playerOneDiv);
-    const playerOneScore = document.getElementById("playerOne");
-    playerOneScore.textContent = `${player.players[0].name} Score: ${player.players[0].score}`;
+    playerOneDiv.textContent = `${player.players[0].name} Score: ${player.players[0].score}`;
     const vsDiv = document.createElement("div");
     vsDiv.classList.add("gradient-text");
     vsDiv.appendChild(document.createTextNode("VS"));
@@ -388,15 +380,15 @@ const accessDOM = (() => {
     const playerTwoDiv = document.createElement("div");
     playerTwoDiv.setAttribute("id", "playerTwo");
     playersDiv.appendChild(playerTwoDiv);
-    const playerTwoScore = document.getElementById("playerTwo");
-    console.log(playerTwoScore);
-    playerTwoScore.textContent = `${player.players[1].name} Score: ${player.players[1].score}`;
+    playerTwoDiv.textContent = `${player.players[1].name} Score: ${player.players[1].score}`;
   };
 
   const getDomId = () => {
+    const playerOneScore = document.getElementById("playerOne");
+    const playerTwoScore = document.getElementById("playerTwo");
     const xContainer = document.getElementById("X");
     const oContainer = document.getElementById("O");
-    return { xContainer, oContainer };
+    return { playerOneScore, playerTwoScore, xContainer, oContainer };
   };
 
   const winnerMessage = document.getElementById("winner-message");

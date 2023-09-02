@@ -609,16 +609,8 @@ video {
   margin-top: 1rem;
 }
 
-.box-border {
-  box-sizing: border-box;
-}
-
 .flex {
   display: flex;
-}
-
-.table {
-  display: table;
 }
 
 .grid {
@@ -750,14 +742,6 @@ video {
   text-align: center;
 }
 
-.font-\[\'Lilita_One\'\] {
-  font-family: 'Lilita One';
-}
-
-.font-\[\'lilita_one\'\] {
-  font-family: 'lilita one';
-}
-
 .font-\[\'Carter_One\'\] {
   font-family: 'Carter One';
 }
@@ -776,13 +760,13 @@ video {
   line-height: 2.5rem;
 }
 
-.text-6xl {
-  font-size: 3.75rem;
+.text-5xl {
+  font-size: 3rem;
   line-height: 1;
 }
 
-.text-5xl {
-  font-size: 3rem;
+.text-6xl {
+  font-size: 3.75rem;
   line-height: 1;
 }
 
@@ -814,8 +798,8 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
-.font-carter {
-  font-family: "Carter One", cursive;
+* {
+  box-sizing: border-box;
 }
 
 .gradient-text {
@@ -867,15 +851,6 @@ video {
   }
 }
 
-#score {
-  color: rgb(250 250 250);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-evenly;
-  box-sizing: border-box;
-}
-
 @media screen and (min-width: 640px) {
   #score {
     flex: 1;
@@ -895,14 +870,6 @@ video {
     max-width: 1000px;
   }
 }
-
-/* .text-shadow {
-  text-shadow:
-    -1px -1px 0 #fff,
-    1px -1px 0 #fff,
-    -1px 1px 0 #fff,
-    1px 1px 0 #fff;
-} */
 
 @media (min-width: 640px) {
   .sm\:h-40 {
