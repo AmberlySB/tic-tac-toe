@@ -7,27 +7,41 @@ const gameBoard = (() => {
     } else if (player.players[1].name !== "AI Overlord") {
       game.setTurn();
       console.log(game.getTurn().marker);
-      document.getElementById(gameSpace).textContent = `${
-        game.getTurn().marker
-      }`;
-      gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
-      if (game.checkWinner()) {
-        game.continueGame();
+      if (game.getTurn().marker === "X") {
+        document.getElementById(gameSpace).classList.remove("text-red-500");
+        document.getElementById(gameSpace).classList.add("text-blue-500");
+        document.getElementById(gameSpace).textContent = `${
+          game.getTurn().marker
+        }`;
+        gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
+        if (game.checkWinner()) {
+          game.continueGame();
+        }
+      } else if (game.getTurn().marker === "O") {
+        document.getElementById(gameSpace).classList.remove("text-blue-500");
+        document.getElementById(gameSpace).classList.add("text-red-500");
+        document.getElementById(gameSpace).textContent = `${
+          game.getTurn().marker
+        }`;
+        gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
+        if (game.checkWinner()) {
+          game.continueGame();
+        }
       }
     } else {
       game.setTurn();
       if (game.getTurn().name !== "AI Overlord") {
+        document.getElementById(gameSpace).classList.remove("text-red-500");
+        document.getElementById(gameSpace).classList.add("text-blue-500");
         document.getElementById(gameSpace).textContent = `${
           game.getTurn().marker
         }`;
         gameBoardState.splice(gameSpace, 1, `${game.getTurn().marker}`);
         if (!game.checkWinner()) {
-          setTimeout(game.aiMove, 1500);
+          setTimeout(game.aiMove, 1000);
         } else {
           game.continueGame();
         }
-      } else {
-        // game.aiMove();
       }
     }
   };
@@ -40,6 +54,8 @@ const gameBoard = (() => {
         dialog.close();
       });
     });
+    accessDOM.getDomId().xContainer.classList.remove("scale-150");
+    accessDOM.getDomId().oContainer.classList.remove("scale-150");
   };
 
   return {
@@ -92,8 +108,12 @@ const game = (() => {
     const oCount = gameBoard.gameBoardState.filter((v) => v === "O").length;
     if (xCount === oCount) {
       turn = player.players[0];
+      accessDOM.getDomId().oContainer.classList.add("scale-150");
+      accessDOM.getDomId().xContainer.classList.remove("scale-150");
     } else if (xCount > oCount) {
       turn = player.players[1];
+      accessDOM.getDomId().xContainer.classList.add("scale-150");
+      accessDOM.getDomId().oContainer.classList.remove("scale-150");
     }
   };
 
@@ -179,6 +199,7 @@ const game = (() => {
       gameBoard.gameBoardState[randomMove] !== "X" &&
       gameBoard.gameBoardState[randomMove] !== "O"
     ) {
+      document.getElementById(randomMove).classList.add("text-red-500");
       document.getElementById(randomMove).textContent = `${getTurn().marker}`;
       gameBoard.gameBoardState.splice(randomMove, 1, `${getTurn().marker}`);
       if (game.checkWinner()) {
@@ -299,30 +320,86 @@ const accessDOM = (() => {
   playerVsAi.addEventListener("click", getPlayerName);
 
   const displayScore = () => {
+    // Score container
     const scoreDiv = document.createElement("div");
     scoreDiv.setAttribute("id", "score");
     scoreDiv.classList.add("text-2xl", "sm:text-3xl");
     document.getElementById("player-names").replaceWith(scoreDiv);
     const score = document.getElementById("score");
+
+    // Marker Container
+    const markerContainer = document.createElement("div");
+    markerContainer.setAttribute("id", "marker-container");
+    markerContainer.classList.add(
+      "flex",
+      "justify-evenly",
+      "mb-2",
+      "min-w-[430px]",
+      "text-5xl",
+    );
+    score.appendChild(markerContainer);
+    const markerContainerOne = document.createElement("div");
+    markerContainerOne.classList.add(
+      "w-1/2",
+      "flex",
+      "justify-center",
+      "font-['Permanent_Marker']",
+    );
+    markerContainer.appendChild(markerContainerOne);
+    const markerContainerTwo = document.createElement("div");
+    markerContainerTwo.classList.add(
+      "w-1/2",
+      "flex",
+      "justify-center",
+      "font-['Permanent_Marker']",
+    );
+    markerContainer.appendChild(markerContainerTwo);
+    const xDiv = document.createElement("div");
+    xDiv.setAttribute("id", "X");
+    xDiv.classList.add("text-blue-500");
+    xDiv.appendChild(document.createTextNode("X"));
+    markerContainerOne.appendChild(xDiv);
+    const oDiv = document.createElement("div");
+    oDiv.setAttribute("id", "O");
+    oDiv.classList.add("text-red-500");
+    oDiv.appendChild(document.createTextNode("O"));
+    markerContainerTwo.appendChild(oDiv);
+
+    // Players Container
+    const playersDiv = document.createElement("div");
+    playersDiv.setAttribute("id", "players-container");
+    playersDiv.classList.add(
+      "flex",
+      "flex-col",
+      "sm:flex-row",
+      "items-center",
+      "justify-evenly",
+    );
+    score.appendChild(playersDiv);
     const playerOneDiv = document.createElement("div");
     playerOneDiv.setAttribute("id", "playerOne");
-    score.appendChild(playerOneDiv);
+    playersDiv.appendChild(playerOneDiv);
     const playerOneScore = document.getElementById("playerOne");
     playerOneScore.textContent = `${player.players[0].name} Score: ${player.players[0].score}`;
     const vsDiv = document.createElement("div");
     vsDiv.classList.add("gradient-text");
     vsDiv.appendChild(document.createTextNode("VS"));
-    score.appendChild(vsDiv);
+    playersDiv.appendChild(vsDiv);
     const playerTwoDiv = document.createElement("div");
     playerTwoDiv.setAttribute("id", "playerTwo");
-    score.appendChild(playerTwoDiv);
+    playersDiv.appendChild(playerTwoDiv);
     const playerTwoScore = document.getElementById("playerTwo");
     console.log(playerTwoScore);
     playerTwoScore.textContent = `${player.players[1].name} Score: ${player.players[1].score}`;
   };
 
-  const winnerMessage = document.getElementById("winner-message");
+  const getDomId = () => {
+    const xContainer = document.getElementById("X");
+    const oContainer = document.getElementById("O");
+    return { xContainer, oContainer };
+  };
 
+  const winnerMessage = document.getElementById("winner-message");
   const keepPlaying = document.getElementById("continue");
   keepPlaying.addEventListener("click", gameBoard.resetBoard);
 
@@ -330,5 +407,6 @@ const accessDOM = (() => {
     displayScore: displayScore,
     gameSpaces: gameSpaces,
     winnerMessage: winnerMessage,
+    getDomId: getDomId,
   };
 })();
