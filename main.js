@@ -1,4 +1,6 @@
 const gameBoard = (() => {
+  "use strict";
+
   const gameBoardState = ["", "", "", "", "", "", "", "", ""];
 
   const updateBoard = function (gameSpace) {
@@ -65,16 +67,18 @@ const gameBoard = (() => {
 })();
 
 const player = (() => {
-  const createPlayer = (name, marker, score) => {
+  "use strict";
+
+  const _createPlayer = (name, marker, score) => {
     return { name, marker, score };
   };
 
   const players = [];
 
   const setPlayers = (first, second) => {
-    const playerOne = createPlayer(first, "X", 0);
+    const playerOne = _createPlayer(first, "X", 0);
     players.push(playerOne);
-    const playerTwo = createPlayer(second, "O", 0);
+    const playerTwo = _createPlayer(second, "O", 0);
     players.push(playerTwo);
     accessDOM.displayScore();
   };
@@ -93,23 +97,25 @@ const player = (() => {
 })();
 
 const game = (() => {
-  let turn = 0;
+  "use strict";
+
+  let _turn = 0;
   const setTurn = () => {
     const xCount = gameBoard.gameBoardState.filter((v) => v === "X").length;
     const oCount = gameBoard.gameBoardState.filter((v) => v === "O").length;
     if (xCount === oCount) {
-      turn = player.players[0];
+      _turn = player.players[0];
       accessDOM.getDomId().oContainer.classList.add("scale-150");
       accessDOM.getDomId().xContainer.classList.remove("scale-150");
     } else if (xCount > oCount) {
-      turn = player.players[1];
+      _turn = player.players[1];
       accessDOM.getDomId().xContainer.classList.add("scale-150");
       accessDOM.getDomId().oContainer.classList.remove("scale-150");
     }
   };
 
   const getTurn = () => {
-    return turn;
+    return _turn;
   };
 
   const checkWinner = () => {
@@ -211,7 +217,9 @@ const game = (() => {
 })();
 
 const accessDOM = (() => {
-  const getGameSpaceId = function (e) {
+  "use strict";
+
+  const _getGameSpaceId = function (e) {
     const gameSpaceId = e.target.id;
     if (gameBoard.gameBoardState[gameSpaceId] !== "") {
       return;
@@ -222,10 +230,10 @@ const accessDOM = (() => {
 
   const gameSpaces = document.querySelectorAll("#game-board > div");
   gameSpaces.forEach((space) => {
-    space.addEventListener("click", getGameSpaceId);
+    space.addEventListener("click", _getGameSpaceId);
   });
 
-  const choosePlayers = document.getElementById("choose-players");
+  const _choosePlayers = document.getElementById("choose-players");
   const getPlayerNames = () => {
     const nameDiv = document.createElement("div");
     nameDiv.setAttribute("id", "player-names");
@@ -267,7 +275,7 @@ const accessDOM = (() => {
     nameButton.addEventListener("click", () => {
       player.setPlayers(nameOneInput.value, nameTwoInput.value);
     });
-    choosePlayers.replaceWith(nameDiv);
+    _choosePlayers.replaceWith(nameDiv);
   };
 
   const getPlayerName = () => {
@@ -296,13 +304,13 @@ const accessDOM = (() => {
     nameButton.addEventListener("click", () => {
       player.setPlayers(nameOneInput.value, "AI Overlord");
     });
-    choosePlayers.replaceWith(nameDiv);
+    _choosePlayers.replaceWith(nameDiv);
   };
 
-  const playerVsPlayer = document.getElementById("pvp");
-  const playerVsAi = document.getElementById("pve");
-  playerVsPlayer.addEventListener("click", getPlayerNames);
-  playerVsAi.addEventListener("click", getPlayerName);
+  const _playerVsPlayer = document.getElementById("pvp");
+  const _playerVsAi = document.getElementById("pve");
+  _playerVsPlayer.addEventListener("click", getPlayerNames);
+  _playerVsAi.addEventListener("click", getPlayerName);
 
   const displayScore = () => {
     // Score container
@@ -392,8 +400,8 @@ const accessDOM = (() => {
   };
 
   const winnerMessage = document.getElementById("winner-message");
-  const keepPlaying = document.getElementById("continue");
-  keepPlaying.addEventListener("click", gameBoard.resetBoard);
+  const _keepPlaying = document.getElementById("continue");
+  _keepPlaying.addEventListener("click", gameBoard.resetBoard);
 
   return {
     displayScore: displayScore,
