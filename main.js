@@ -214,9 +214,7 @@ const game = (() => {
     checkMarkers(winCondition.f, oMarkers.f, xMarkers.f, noMarkers.f)
     checkMarkers(winCondition.g, oMarkers.g, xMarkers.g, noMarkers.g)
     checkMarkers(winCondition.h, oMarkers.h, xMarkers.h, noMarkers.h)
-    //TODO:
-    //reorganize code so that it checks for win conditions first, then for blocks, then makes random move
-    //add case for g and h arrays
+
     if(getIndices().xIndices.length === 1) {
       const firstMove = Math.floor(Math.random() * gameBoard.gameBoardState.length)
       if(gameBoard.gameBoardState[4] === 'X'){
